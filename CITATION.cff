@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use Amino Acid Learn in teaching or research, please cite it as below."
+title: "Amino Acid Learn"
+type: software
+authors:
+  - family-names: Bindschaedler
+    given-names: Quentin P.
+    affiliation: ChemTrain
+abstract: "A Quizlet-style trainer for the 20 standard amino acids: structures, names, codes, charge at pH 7 and class, in one HTML file."
+url: "https://chemtrain.github.io/amino-acid-learn/amino_acid_learn.html"
+repository-code: "https://github.com/ChemTrain/amino-acid-learn"
+license:
+  - MIT
+  - CC-BY-4.0
+date-released: 2026-11-16
+keywords:
+  - amino acids
+  - biochemistry
+  - chemistry education
