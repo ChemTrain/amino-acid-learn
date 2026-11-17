@@ -579,7 +579,7 @@ window.CTLearn = (function () {
       </div>
     </div>
     <div class="optfoot">
-      <p class="help">Structures are drawn un-ionised, as L-amino acids; Charge asks for the net charge of the whole amino acid at pH 7. Classes are Lehninger's five groups of side chains. Answers applies to Name, the codes and From code: Mixed questions are multiple choice until a card is familiar, then typed; typed names forgive small spelling slips, and codes are not case-sensitive. A card is mastered after two correct answers in a row; progress is saved in this browser.</p>
+      <p class="help">Structures are drawn un-ionised, as L-amino acids; Charge asks for the net charge of the whole amino acid at pH 7. Classes are Lehninger's five groups of side chains. Answers applies to Name, the codes and From code: Mixed questions are multiple choice until a card is familiar, then typed; typed names forgive small spelling slips, and codes are not case-sensitive. A card is mastered after three right answers (a wrong one moves it back a step); progress is saved in this browser.</p>
       <div data-for="learn flashcards cards"><button class="btn ghost small" id="reset-progress" type="button">Reset progress for this set</button></div>
     </div>
   </section>
@@ -899,6 +899,12 @@ const ASK = {
 };
 const optLabel = o => cur.dir === 'charge' ? chargeText(o) : cur.dir === 'class' ? clsHTML(o)
   : cur.dir === 'three' ? esc(o.three) : cur.dir === 'one' ? esc(o.one) : cur.dir === 'struct' ? molSVG(o.mol, 1.25, 150, 260) : esc(o.name);
+// once answered, every choice says what it is: the amino acid behind a code or structure, the codes behind a name,
+// and the amino acids with that charge or in that class
+const codesOf = cs => cs.map(c => esc(c.three)).join(', ');
+const optNote = o => cur.dir === 'charge' ? codesOf(ALL_CARDS.filter(c => c.charge === o))
+  : cur.dir === 'class' ? codesOf(ALL_CARDS.filter(c => c.cls === o))
+  : cur.dir === 'name' || cur.dir === 'code' ? `${esc(o.three)} · ${esc(o.one)}` : esc(o.name);
 const PLACEHOLDER_TXT = { name: 'Name the amino acid', code: 'Name the amino acid', three: 'Three-letter code, e.g. Ala', one: 'One-letter code, e.g. A' };
 
 function questionHTML() {
@@ -917,8 +923,7 @@ function questionHTML() {
       let k = 'opt';
       if (cur.answered) k += rightOption(o) ? ' correct' : r.chosen === i ? ' wrong' : ' dim';
       // once answered, each wrong amino acid says what it is
-      const why = cur.answered && !rightOption(o) && typeof o === 'object'
-        ? `<span class="why">${cur.dir === 'struct' ? esc(o.name) : cur.dir === 'name' || cur.dir === 'code' ? `${esc(o.three)} · ${esc(o.one)}` : esc(o.name)}</span>` : '';
+      const why = cur.answered ? `<span class="why">${optNote(o)}</span>` : '';
       return `<button type="button" class="${k}" data-i="${i}" ${cur.answered ? 'disabled' : ''}><span class="key">${i + 1}</span><span class="val"><span>${optLabel(o)}</span>${why}</span></button>`;
     }).join('') + '</div>';
   } else if (!cur.answered) {
